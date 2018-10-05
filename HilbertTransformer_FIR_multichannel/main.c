@@ -20,7 +20,7 @@
 //#pragma DATA_SECTION(firFP, "firfilt") // Deve ser declarado em main.c
 
 // Coeficientes constantes, gerados via MATLAB
-const float coeffs_hilb[HILBERT_TRANSFORMER_ORDER+1] = {
+float coeffs_hilb[HILBERT_TRANSFORMER_ORDER+1] = {
 #include "coeffs_hilbert_negativo.h"
 };
 
