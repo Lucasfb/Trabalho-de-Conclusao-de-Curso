@@ -28,42 +28,42 @@
 		<link>
 			<name>F2837xS_CodeStartBranch.asm</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ti/C2000Ware_1_00_05_00_Software/device_support/f2837xs/common/source/F2837xS_CodeStartBranch.asm</locationURI>
+			<locationURI>INSTALLROOT_2837XS/common/source/F2837xS_CodeStartBranch.asm</locationURI>
 		</link>
 		<link>
 			<name>F2837xS_DefaultISR.c</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ti/C2000Ware_1_00_05_00_Software/device_support/f2837xs/common/source/F2837xS_DefaultISR.c</locationURI>
+			<locationURI>INSTALLROOT_2837XS/common/source/F2837xS_DefaultISR.c</locationURI>
 		</link>
 		<link>
 			<name>F2837xS_GlobalVariableDefs.c</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ti/C2000Ware_1_00_05_00_Software/device_support/f2837xs/headers/source/F2837xS_GlobalVariableDefs.c</locationURI>
+			<locationURI>INSTALLROOT_2837XS/headers/source/F2837xS_GlobalVariableDefs.c</locationURI>
 		</link>
 		<link>
 			<name>F2837xS_Gpio.c</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ti/C2000Ware_1_00_05_00_Software/device_support/f2837xs/common/source/F2837xS_Gpio.c</locationURI>
+			<locationURI>INSTALLROOT_2837XS/common/source/F2837xS_Gpio.c</locationURI>
 		</link>
 		<link>
 			<name>F2837xS_PieCtrl.c</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ti/C2000Ware_1_00_05_00_Software/device_support/f2837xs/common/source/F2837xS_PieCtrl.c</locationURI>
+			<locationURI>INSTALLROOT_2837XS/common/source/F2837xS_PieCtrl.c</locationURI>
 		</link>
 		<link>
 			<name>F2837xS_PieVect.c</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ti/C2000Ware_1_00_05_00_Software/device_support/f2837xs/common/source/F2837xS_PieVect.c</locationURI>
+			<locationURI>INSTALLROOT_2837XS/common/source/F2837xS_PieVect.c</locationURI>
 		</link>
 		<link>
 			<name>F2837xS_SysCtrl.c</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ti/C2000Ware_1_00_05_00_Software/device_support/f2837xs/common/source/F2837xS_SysCtrl.c</locationURI>
+			<locationURI>INSTALLROOT_2837XS/common/source/F2837xS_SysCtrl.c</locationURI>
 		</link>
 		<link>
 			<name>F2837xS_usDelay.asm</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ti/C2000Ware_1_00_05_00_Software/device_support/f2837xs/common/source/F2837xS_usDelay.asm</locationURI>
+			<locationURI>INSTALLROOT_2837XS/common/source/F2837xS_usDelay.asm</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>
