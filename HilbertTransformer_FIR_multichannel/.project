@@ -80,5 +80,9 @@
 			<name>INSTALLROOT_TO_FPU</name>
 			<value>file:/C:/ti/C2000Ware_1_00_05_00_Software/libraries/dsp/FPU/c28</value>
 		</variable>
+		<variable>
+			<name>INSTALLROTT_2837XS_HEADERS</name>
+			<value>file:/C:/ti/C2000Ware_1_00_05_00_Software/device_support/f2837xs/headers</value>
+		</variable>
 	</variableList>
 </projectDescription>
