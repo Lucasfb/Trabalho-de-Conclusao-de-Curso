@@ -70,15 +70,13 @@ int main(void)
 
     hnd_hilb_channel0 = hilbert_transformer_create(hilb_channel0, hilb_buffer_chnl0,coeffs_hilb);
 
-
-
     uint32_t idx_hilb = 0;
-     float xn = 0; // O uso de xn e yn em vez dos arrays diretamente é para se aproveitar das ferramentas de
-     float yn = 0; // visualizacao da IDE CCS
-     for (idx_hilb = 0; idx_hilb < TEST_SIGNAL_SIZE;idx_hilb++){
-         xn = test_input_signal[idx_hilb];
-         yn = hilbert_transformer(xn, hnd_hilb_channel0);
-         output_signal[idx_hilb] = yn;
+    float xn = 0; // O uso de xn e yn em vez dos arrays diretamente é para se aproveitar das ferramentas de
+    float yn = 0; // visualizacao da IDE CCS
+    for (idx_hilb = 0; idx_hilb < TEST_SIGNAL_SIZE;idx_hilb++){
+        xn = test_input_signal[idx_hilb];
+        yn = hilbert_transformer(xn, hnd_hilb_channel0);
+        output_signal[idx_hilb] = yn;
      }
 
 
