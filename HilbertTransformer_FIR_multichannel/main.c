@@ -68,7 +68,7 @@ int main(void)
     FPU_initSystemClocks();
     FPU_initEpie();
 
-    hnd_hilb_channel0 = hilbert_transformer_create(hilb_channel0, hilb_buffer_chnl0,coeffs_hilb);
+    hnd_hilb_channel0 = hilbert_transformer_create(hilb_channel0, hilb_buffer_chnl0, coeffs_hilb);
 
     uint32_t idx_hilb = 0;
     float xn = 0; // O uso de xn e yn em vez dos arrays diretamente é para se aproveitar das ferramentas de
@@ -79,7 +79,7 @@ int main(void)
         output_signal[idx_hilb] = yn;
      }
 
-
+    for(;;);
     done();
 	return 0;
 }
