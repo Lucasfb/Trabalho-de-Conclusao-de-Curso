@@ -72,7 +72,7 @@ int main(void)
     for (idx_hilb = 0; idx_hilb < TEST_SIGNAL_SIZE;idx_hilb++){
         xn = test_input_signal[idx_hilb];
         hnd_firFP->input = xn;
-        hnd_firFP->calc(&firFP);
+        hnd_firFP->calc(hnd_firFP);
         yn = hnd_firFP->output;
         output_signal[idx_hilb] = yn;
     }

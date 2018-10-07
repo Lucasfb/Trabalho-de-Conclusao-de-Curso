@@ -65,6 +65,11 @@
 			<type>1</type>
 			<locationURI>INSTALLROOT_2837XS/common/source/F2837xS_usDelay.asm</locationURI>
 		</link>
+		<link>
+			<name>FIR_f32.asm</name>
+			<type>1</type>
+			<location>C:/ti/C2000Ware_1_00_05_00_Software/libraries/dsp/FPU/c28/source/filter/FIR_f32.asm</location>
+		</link>
 	</linkedResources>
 	<variableList>
 		<variable>
