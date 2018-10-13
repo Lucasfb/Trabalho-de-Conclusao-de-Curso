@@ -118,8 +118,17 @@ SECTIONS
    .reset              : > RESET,     PAGE = 0, TYPE = DSECT /* not used, */
    
        /* Test specific sections */
-   firldb         ALIGN(0x100)  > RAMLS0,    PAGE = 0
-   firfilt          : > RAMLS2,    PAGE = 0
+   hilbbuffer0         ALIGN(0x100)  > RAMLS0,    PAGE = 0
+   hilbfilt0          : > RAMLS2,    PAGE = 0
+
+   hilbbuffer1         ALIGN(0x100)  > RAMLS0,    PAGE = 0
+   hilbfilt1          : > RAMLS2,    PAGE = 0
+
+   hilbbuffer2         ALIGN(0x100)  > RAMLS0,    PAGE = 0
+   hilbfilt2          : > RAMLS2,    PAGE = 0
+
+   hilbbuffer3         ALIGN(0x100)  > RAMLS0,    PAGE = 0
+   hilbfilt3          : > RAMLS2,    PAGE = 0
 
 	coeffhilb ALIGN(0x100) > RAMLS2, PAGE = 0
 
