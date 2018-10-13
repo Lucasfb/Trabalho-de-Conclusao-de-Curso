@@ -85,6 +85,9 @@ float hilb_buffer_chnl3[HILBERT_TRANSFORMER_ORDER+1];
 
 
 float output_signal_chnl0[TEST_SIGNAL_SIZE];
+float output_signal_chnl1[TEST_SIGNAL_SIZE];
+float output_signal_chnl2[TEST_SIGNAL_SIZE];
+float output_signal_chnl3[TEST_SIGNAL_SIZE];
 
 int main(void)
 {
@@ -95,15 +98,19 @@ int main(void)
 
     // Inicializacao da transformada de Hilbert
     hilbert_transformer_create(hnd_hilb_chnl0, hilb_buffer_chnl0,coeffs_hilb);
+    hilbert_transformer_create(hnd_hilb_chnl1, hilb_buffer_chnl1,coeffs_hilb);
+    hilbert_transformer_create(hnd_hilb_chnl2, hilb_buffer_chnl2,coeffs_hilb);
+    hilbert_transformer_create(hnd_hilb_chnl3, hilb_buffer_chnl3,coeffs_hilb);
 
     // Aplicando o filtro FIR para a Transformada de Hilbert
     uint32_t idx_hilb = 0;
-    float xn = 0; // O uso de xn e yn em vez dos arrays diretamente é para se aproveitar das ferramentas de
-    float yn = 0; // visualizacao da IDE CCS
+    //float xn = 0; // O uso de xn e yn em vez dos arrays diretamente é para se aproveitar das ferramentas de
+    //float yn = 0; // visualizacao da IDE CCS
     for (idx_hilb = 0; idx_hilb < TEST_SIGNAL_SIZE;idx_hilb++){
-        xn = test_input_signal_chnl0[idx_hilb];
-        yn = hilbert_transformer(xn, hnd_hilb_chnl0);
-        output_signal_chnl0[idx_hilb] = yn;
+        output_signal_chnl0[idx_hilb]= hilbert_transformer(test_input_signal_chnl0[idx_hilb], hnd_hilb_chnl0);
+        output_signal_chnl1[idx_hilb]= hilbert_transformer(test_input_signal_chnl1[idx_hilb], hnd_hilb_chnl1);
+        output_signal_chnl2[idx_hilb]= hilbert_transformer(test_input_signal_chnl2[idx_hilb], hnd_hilb_chnl2);
+        output_signal_chnl3[idx_hilb]= hilbert_transformer(test_input_signal_chnl3[idx_hilb], hnd_hilb_chnl3);
     }
 
     for(;;);

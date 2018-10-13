@@ -5,8 +5,8 @@
  *      Author: lucas
  */
 
-#ifndef TEST_INPUT_SIGNAL_CHNL0_H_
-#define TEST_INPUT_SIGNAL_CHNL0_H_
+#ifndef TEST_INPUT_SIGNAL_CHNL1_H_
+#define TEST_INPUT_SIGNAL_CHNL1_H_
 
 2.23036,
 1.85351,
