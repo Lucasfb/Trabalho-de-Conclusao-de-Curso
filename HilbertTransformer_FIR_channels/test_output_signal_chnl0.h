@@ -5,8 +5,8 @@
  *      Author: lucas
  */
 
-#ifndef TEST_OUTPUT_SIGNAL_H_
-#define TEST_OUTPUT_SIGNAL_H_
+#ifndef TEST_OUTPUT_SIGNAL_CHNL0_H_
+#define TEST_OUTPUT_SIGNAL_CHNL0_H_
 
 0.00010,
 -0.07109,
@@ -171,4 +171,4 @@
 
 
 
-#endif /* TEST_OUTPUT_SIGNAL_H_ */
+#endif /* TEST_OUTPUT_SIGNAL_CHNL0_H_ */

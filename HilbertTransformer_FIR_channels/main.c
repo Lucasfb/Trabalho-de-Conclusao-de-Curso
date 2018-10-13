@@ -14,13 +14,40 @@
  * Declara uma seção na memoria com um nome. O linker deve ser alterado e a memoria alinhada, de acordo com as instrucoes da biblioteca
  */
 // Secoes para dados de teste
-#pragma DATA_SECTION(test_input_signal, "sigIn");
-#pragma DATA_SECTION(test_output_signal, "sigOut");
-const float test_input_signal[TEST_SIGNAL_SIZE] = {
-#include "test_input_signal.h"
+#pragma DATA_SECTION(test_input_signal_chnl0, "sigIn0");
+#pragma DATA_SECTION(test_output_signal_chnl0, "sigOut0");
+const float test_input_signal_chnl0[TEST_SIGNAL_SIZE] = {
+#include <test_input_signal_chnl0.h>
 };
-const float test_output_signal[TEST_SIGNAL_SIZE] = {
-#include "test_output_signal.h"
+const float test_output_signal_chnl0[TEST_SIGNAL_SIZE] = {
+#include <test_output_signal_chnl0.h>
+};
+
+#pragma DATA_SECTION(test_input_signal_chnl1, "sigIn1");
+#pragma DATA_SECTION(test_output_signal_chnl1, "sigOut1");
+const float test_input_signal_chnl1[TEST_SIGNAL_SIZE] = {
+#include <test_input_signal_chnl1.h>
+};
+const float test_output_signal_chnl1[TEST_SIGNAL_SIZE] = {
+#include <test_output_signal_chnl1.h>
+};
+
+#pragma DATA_SECTION(test_input_signal_chnl2, "sigIn2");
+#pragma DATA_SECTION(test_output_signal_chnl2, "sigOut2");
+const float test_input_signal_chnl2[TEST_SIGNAL_SIZE] = {
+#include <test_input_signal_chnl2.h>
+};
+const float test_output_signal_chnl2[TEST_SIGNAL_SIZE] = {
+#include <test_output_signal_chnl2.h>
+};
+
+#pragma DATA_SECTION(test_input_signal_chnl3, "sigIn3");
+#pragma DATA_SECTION(test_output_signal_chnl3, "sigOut3");
+const float test_input_signal_chnl3[TEST_SIGNAL_SIZE] = {
+#include <test_input_signal_chnl3.h>
+};
+const float test_output_signal_chnl3[TEST_SIGNAL_SIZE] = {
+#include <test_output_signal_chnl3.h>
 };
 //----------------------------------------------------------------
 // Coeficientes da transformada de Hilbert. Os mesmos para todos os casos
@@ -57,7 +84,7 @@ float hilb_buffer_chnl3[HILBERT_TRANSFORMER_ORDER+1];
 
 
 
-float output_signal[TEST_SIGNAL_SIZE];
+float output_signal_chnl0[TEST_SIGNAL_SIZE];
 
 int main(void)
 {
@@ -74,9 +101,9 @@ int main(void)
     float xn = 0; // O uso de xn e yn em vez dos arrays diretamente é para se aproveitar das ferramentas de
     float yn = 0; // visualizacao da IDE CCS
     for (idx_hilb = 0; idx_hilb < TEST_SIGNAL_SIZE;idx_hilb++){
-        xn = test_input_signal[idx_hilb];
+        xn = test_input_signal_chnl0[idx_hilb];
         yn = hilbert_transformer(xn, hnd_hilb_chnl0);
-        output_signal[idx_hilb] = yn;
+        output_signal_chnl0[idx_hilb] = yn;
     }
 
     for(;;);

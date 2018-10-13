@@ -139,8 +139,17 @@ SECTIONS
                        LOAD_SIZE(_CoeffFiltLoadSize),
                        PAGE = 0
 */
-   sigIn            : > RAMLS5,    PAGE = 1
-   sigOut           : > RAMLS5,    PAGE = 1
+   sigIn0           : > RAMLS5,    PAGE = 1
+   sigOut0           : > RAMLS5,    PAGE = 1
+
+   sigIn1           : > RAMLS5,    PAGE = 1
+   sigOut1           : > RAMLS5,    PAGE = 1
+
+   sigIn2           : > RAMGS5,    PAGE = 1
+   sigOut2           : > RAMGS5,    PAGE = 1
+
+   sigIn3           : > RAMGS5,    PAGE = 1
+   sigOut3           : > RAMGS5,    PAGE = 1
 }
 
 /*
