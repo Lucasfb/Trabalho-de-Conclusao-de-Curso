@@ -73,22 +73,22 @@
 		<link>
 			<name>memcpy_fast.asm</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ti/C2000Ware_1_00_05_00_Software/libraries/dsp/FPU/c28/source/utility/memcpy_fast.asm</locationURI>
+			<location>C:/ti/C2000Ware_1_00_05_00_Software/libraries/dsp/FPU/c28/source/utility/memcpy_fast.asm</location>
 		</link>
 		<link>
 			<name>memset_fast.asm</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ti/C2000Ware_1_00_05_00_Software/libraries/dsp/FPU/c28/source/utility/memset_fast.asm</locationURI>
+			<location>C:/ti/C2000Ware_1_00_05_00_Software/libraries/dsp/FPU/c28/source/utility/memset_fast.asm</location>
 		</link>
 		<link>
 			<name>mpy_SP_CSxCS.asm</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ti/C2000Ware_1_00_05_00_Software/libraries/dsp/FPU/c28/source/vector/mpy_SP_CSxCS.asm</locationURI>
+			<location>C:/ti/C2000Ware_1_00_05_00_Software/libraries/dsp/FPU/c28/source/vector/mpy_SP_CSxCS.asm</location>
 		</link>
 		<link>
 			<name>mpy_SP_CVxCV.asm</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ti/C2000Ware_1_00_05_00_Software/libraries/dsp/FPU/c28/source/vector/mpy_SP_CVxCV.asm</locationURI>
+			<location>C:/ti/C2000Ware_1_00_05_00_Software/libraries/dsp/FPU/c28/source/vector/sub_SP_CVxCV.asm</location>
 		</link>
 	</linkedResources>
 	<variableList>

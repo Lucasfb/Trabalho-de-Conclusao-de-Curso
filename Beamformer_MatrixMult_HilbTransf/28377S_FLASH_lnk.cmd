@@ -150,6 +150,9 @@ SECTIONS
 
    sigIn3           : > RAMGS5,    PAGE = 1
    sigOut3           : > RAMGS5,    PAGE = 1
+
+   bf_test_input	: > RAMGS1, PAGE = 1
+   bf_test_output   : > RAMGS2, PAGE = 1
 }
 
 /*
