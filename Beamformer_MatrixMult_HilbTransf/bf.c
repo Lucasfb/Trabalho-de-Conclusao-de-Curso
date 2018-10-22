@@ -2,32 +2,23 @@
  * bf.c
  */
 
-#include <bf.h>
+#include "bf.h"
 
-complex_float blank = {0,0};
-
-complex_float * aplicar_beamformer_vetor(
-        complex_float vetor_pesos[NUMERO_MICS],
-        complex_float matriz_sinal[NUMERO_MICS][NUMERO_AMOSTRAS],
-        complex_float return_vetor_aplicado[NUMERO_AMOSTRAS]){
-
-    //Indices usados
-    uint32_t i=0;
-    uint32_t j=0;
+complex_float _bf_pesos[NUMERO_MICS] = {
+        #include <pesos_teste.h>
+};
 
 
-     for (i = 0 ; i < NUMERO_AMOSTRAS ; i++){
-         for (j = 0 ; j < NUMERO_MICS ; j++){
-             __asm(" NOP");
-             return_vetor_aplicado[i] = mpy_SP_CSxCS(vetor_pesos[j], matriz_sinal[j][i]);
-             __asm(" NOP");
-     }
+complex_float bf_aplicar(complex_float input[NUMERO_MICS]){
+    uint16_t idx_mic;
+    complex_float output = {0,0};
+    complex_float bf_sum = {0,0};
+    for (idx_mic = 0 ; idx_mic < NUMERO_MICS ; idx_mic++){
+        __asm(" NOP");
+        bf_sum = mpy_SP_CSxCS(_bf_pesos[idx_mic],input[idx_mic]);
+        output.dat[0] = output.dat[0] + bf_sum.dat[0];
+        output.dat[1] = output.dat[1] + bf_sum.dat[1];
+        __asm(" NOP");
  }
-
-     return return_vetor_aplicado;
+    return output;
 }
-
-
-
-
-

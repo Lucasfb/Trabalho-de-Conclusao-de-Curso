@@ -4,8 +4,8 @@
  * main.c
  */
 
-#include "F28x_Project.h"
-#include "fpu_filter.h"
+#include <F28x_Project.h>
+#include <fpu_filter.h>
 #include "setup.h"
 #include "hilbert_transformer.h"
 #include "bf.h"
@@ -56,6 +56,8 @@ const float test_out_signal_chnl3[TEST_SIGNAL_SIZE] = {
 complex_float bf_out_vector[TEST_SIGNAL_SIZE-HILBERT_DELAY];
 #pragma DATA_SECTION(bf_in_vector, "bf_test_input");
 complex_float bf_in_vector[TEST_SIGNAL_SIZE-HILBERT_DELAY][NUMERO_MICS];
+complex_float bf_in[NUMERO_MICS];
+complex_float bf_out;
 
 //----------------------------------------------------------------
 // Coeficientes da transformada de Hilbert. Os mesmos para todos os casos
@@ -103,14 +105,10 @@ int main(void)
     FPU_initEpie();
 
     // Variavel para teste de BF
-    static complex_float bf_pesos[NUMERO_MICS] = {
-        #include <pesos_teste.h>
-    };
-    complex_float bf_out;
+    //static complex_float bf_pesos[NUMERO_MICS] = {
+    //    #include <pesos_teste.h>
+    //};
 
-    complex_float bf_input[NUMERO_MICS];
-
-    memset_fast(bf_input, 0, NUMERO_MICS*sizeof(complex_float));
 
     // Inicializacao da transformada de Hilbert
     hilbert_transformer_create(hnd_hilb_chnl0, hilb_buffer_chnl0,coeffs_hilb);
@@ -150,19 +148,31 @@ int main(void)
             bf_in_vector[idx_bf][3].dat[1] = hilbert_out_signal_chnl3[idx_bf+HILBERT_DELAY];
     };
 
-
         // Aplicacao do Beamformer
-        complex_float bf_sum = {0,0};
-        uint16_t idx_mic = 0;
 
+
+        //complex_float bf_sum = {0,0};
+        //uint16_t idx_mic = 0;
+        //bf_sum.dat[0] = 0;
+        //bf_sum.dat[1] = 0;
+        uint16_t idx_mic;
         for (idx_bf = 0 ; idx_bf < TEST_SIGNAL_SIZE-HILBERT_DELAY ; idx_bf++){
+            for (idx_mic = 0 ; idx_mic < NUMERO_MICS ; idx_mic++){
+            bf_in[idx_mic].dat[0] = bf_in_vector[idx_bf][idx_mic].dat[0];
+            bf_in[idx_mic].dat[1] = bf_in_vector[idx_bf][idx_mic].dat[1];
+            }
+            bf_out = bf_aplicar(bf_in);
+            bf_out_vector[idx_bf] = bf_out;
+            /*
+            bf_sum.dat[0] = 0;
+            bf_sum.dat[1] = 0;
              for (idx_mic = 0 ; idx_mic < NUMERO_MICS ; idx_mic++){
                  __asm(" NOP");
                  bf_sum = mpy_SP_CSxCS(bf_pesos[idx_mic],bf_in_vector[idx_bf][idx_mic]);
                  bf_out_vector[idx_bf].dat[0] = bf_out_vector[idx_bf].dat[0] + bf_sum.dat[0];
                  bf_out_vector[idx_bf].dat[1] = bf_out_vector[idx_bf].dat[1] + bf_sum.dat[1];
                  __asm(" NOP");
-             }
+             }*/
 
          }
 
