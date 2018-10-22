@@ -53,9 +53,9 @@ const float test_out_signal_chnl3[TEST_SIGNAL_SIZE] = {
 
 
 #pragma DATA_SECTION(bf_out_vector, "bf_test_output");
-complex_float bf_out_vector[TEST_SIGNAL_SIZE];
+complex_float bf_out_vector[TEST_SIGNAL_SIZE-HILBERT_DELAY];
 #pragma DATA_SECTION(bf_in_vector, "bf_test_input");
-complex_float bf_in_vector[TEST_SIGNAL_SIZE][NUMERO_MICS];
+complex_float bf_in_vector[TEST_SIGNAL_SIZE-HILBERT_DELAY][NUMERO_MICS];
 
 //----------------------------------------------------------------
 // Coeficientes da transformada de Hilbert. Os mesmos para todos os casos
@@ -99,7 +99,6 @@ float hilbert_out_signal_chnl3[TEST_SIGNAL_SIZE];
 
 int main(void)
 {
-
     FPU_initSystemClocks();
     FPU_initEpie();
 
@@ -107,7 +106,7 @@ int main(void)
     static complex_float bf_pesos[NUMERO_MICS] = {
         #include <pesos_teste.h>
     };
-    complex_float bf_output;
+    complex_float bf_out;
 
     complex_float bf_input[NUMERO_MICS];
 
@@ -135,33 +134,38 @@ int main(void)
         hilbert_out_signal_chnl1[idx_hilb]= hilbert_transformer(test_mic_in_chnl1[idx_hilb], hnd_hilb_chnl1);
         hilbert_out_signal_chnl2[idx_hilb]= hilbert_transformer(test_mic_in_chnl2[idx_hilb], hnd_hilb_chnl2);
         hilbert_out_signal_chnl3[idx_hilb]= hilbert_transformer(test_mic_in_chnl3[idx_hilb], hnd_hilb_chnl3);
-        // USo da Transformada de Hilbert para gerar numeros complexos
-        bf_input[0].dat[0] = test_mic_in_chnl0[idx_hilb-HILBERT_DELAY];
-        bf_input[0].dat[1] = hilbert_out_signal_chnl0[idx_hilb];
-        bf_input[1].dat[0] = test_mic_in_chnl1[idx_hilb-HILBERT_DELAY];
-        bf_input[1].dat[1] = hilbert_out_signal_chnl1[idx_hilb];
-        bf_input[2].dat[0] = test_mic_in_chnl2[idx_hilb-HILBERT_DELAY];
-        bf_input[2].dat[1] = hilbert_out_signal_chnl2[idx_hilb];
-        bf_input[3].dat[0] = test_mic_in_chnl3[idx_hilb-HILBERT_DELAY];
-        bf_input[3].dat[1] = hilbert_out_signal_chnl3[idx_hilb];
-        uint16_t idx_mic = 0;
-        for (idx_mic = 0 ; idx_mic < 4;idx_mic++ ){
-            bf_in_vector[idx_hilb-HILBERT_DELAY][idx_mic] = bf_input[idx_mic];
         }
 
 
+        // USo da Transformada de Hilbert para gerar numeros complexos para o beamformer
+    uint16_t idx_bf;
+    for (idx_bf = 0; idx_bf <TEST_SIGNAL_SIZE - HILBERT_DELAY; idx_bf++ ){
+            bf_in_vector[idx_bf][0].dat[0] = test_mic_in_chnl0[idx_bf];
+            bf_in_vector[idx_bf][0].dat[1] = hilbert_out_signal_chnl0[idx_bf+HILBERT_DELAY];
+            bf_in_vector[idx_bf][1].dat[0] = test_mic_in_chnl1[idx_bf];
+            bf_in_vector[idx_bf][1].dat[1] = hilbert_out_signal_chnl1[idx_bf+HILBERT_DELAY];
+            bf_in_vector[idx_bf][2].dat[0] = test_mic_in_chnl2[idx_bf];
+            bf_in_vector[idx_bf][2].dat[1] = hilbert_out_signal_chnl2[idx_bf+HILBERT_DELAY];
+            bf_in_vector[idx_bf][3].dat[0] = test_mic_in_chnl3[idx_bf];
+            bf_in_vector[idx_bf][3].dat[1] = hilbert_out_signal_chnl3[idx_bf+HILBERT_DELAY];
+    };
+
+
         // Aplicacao do Beamformer
-        uint16_t j = 0;
         complex_float bf_sum = {0,0};
-        for (j = 0 ; j < NUMERO_MICS ; j++){
-                        __asm(" NOP");
-                        bf_sum = mpy_SP_CSxCS(bf_pesos[j],bf_input[j]);
-                        bf_output.dat[0] = bf_output.dat[0] + bf_sum.dat[0];
-                        bf_output.dat[1] = bf_output.dat[1] + bf_sum.dat[1];
-                        __asm(" NOP");
-                        }
-        bf_out_vector[idx_hilb]=bf_output;
-    }
+        uint16_t idx_mic = 0;
+
+        for (idx_bf = 0 ; idx_bf < TEST_SIGNAL_SIZE-HILBERT_DELAY ; idx_bf++){
+             for (idx_mic = 0 ; idx_mic < NUMERO_MICS ; idx_mic++){
+                 __asm(" NOP");
+                 bf_sum = mpy_SP_CSxCS(bf_pesos[idx_mic],bf_in_vector[idx_bf][idx_mic]);
+                 bf_out_vector[idx_bf].dat[0] = bf_out_vector[idx_bf].dat[0] + bf_sum.dat[0];
+                 bf_out_vector[idx_bf].dat[1] = bf_out_vector[idx_bf].dat[1] + bf_sum.dat[1];
+                 __asm(" NOP");
+             }
+
+         }
+
 
     for(;;);
     done();
