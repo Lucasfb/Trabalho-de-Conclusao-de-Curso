@@ -50,7 +50,7 @@ const float test_mic_in_chnl3[TEST_SIGNAL_SIZE] = {
 const float test_out_signal_chnl3[TEST_SIGNAL_SIZE] = {
 #include <test_output_signal_chnl3.h>
 };
-
+//---------------------------------------------------------------------
 
 #pragma DATA_SECTION(bf_out_vector, "bf_test_output");
 complex_float bf_out_vector[TEST_SIGNAL_SIZE-HILBERT_DELAY];
@@ -104,12 +104,6 @@ int main(void)
     FPU_initSystemClocks();
     FPU_initEpie();
 
-    // Variavel para teste de BF
-    //static complex_float bf_pesos[NUMERO_MICS] = {
-    //    #include <pesos_teste.h>
-    //};
-
-
     // Inicializacao da transformada de Hilbert
     hilbert_transformer_create(hnd_hilb_chnl0, hilb_buffer_chnl0,coeffs_hilb);
     hilbert_transformer_create(hnd_hilb_chnl1, hilb_buffer_chnl1,coeffs_hilb);
@@ -137,25 +131,24 @@ int main(void)
 
         // USo da Transformada de Hilbert para gerar numeros complexos para o beamformer
     uint16_t idx_bf;
+    uint16_t idx_mic;
     for (idx_bf = 0; idx_bf <TEST_SIGNAL_SIZE - HILBERT_DELAY; idx_bf++ ){
-            bf_in_vector[idx_bf][0].dat[0] = test_mic_in_chnl0[idx_bf];
-            bf_in_vector[idx_bf][0].dat[1] = hilbert_out_signal_chnl0[idx_bf+HILBERT_DELAY];
-            bf_in_vector[idx_bf][1].dat[0] = test_mic_in_chnl1[idx_bf];
-            bf_in_vector[idx_bf][1].dat[1] = hilbert_out_signal_chnl1[idx_bf+HILBERT_DELAY];
-            bf_in_vector[idx_bf][2].dat[0] = test_mic_in_chnl2[idx_bf];
-            bf_in_vector[idx_bf][2].dat[1] = hilbert_out_signal_chnl2[idx_bf+HILBERT_DELAY];
-            bf_in_vector[idx_bf][3].dat[0] = test_mic_in_chnl3[idx_bf];
-            bf_in_vector[idx_bf][3].dat[1] = hilbert_out_signal_chnl3[idx_bf+HILBERT_DELAY];
+            for (idx_mic = 0; idx_mic < NUMERO_MICS; idx_mic++){
+            bf_in[0].dat[0] = test_mic_in_chnl0[idx_bf];
+            bf_in[0].dat[1] = hilbert_out_signal_chnl0[idx_bf+HILBERT_DELAY];
+            bf_in[1].dat[0] = test_mic_in_chnl1[idx_bf];
+            bf_in[1].dat[1] = hilbert_out_signal_chnl1[idx_bf+HILBERT_DELAY];
+            bf_in[2].dat[0] = test_mic_in_chnl2[idx_bf];
+            bf_in[2].dat[1] = hilbert_out_signal_chnl2[idx_bf+HILBERT_DELAY];
+            bf_in[3].dat[0] = test_mic_in_chnl3[idx_bf];
+            bf_in[3].dat[1] = hilbert_out_signal_chnl3[idx_bf+HILBERT_DELAY];
+            for (idx_mic = 0; idx_mic < NUMERO_MICS; idx_mic++){
+                bf_in_vector[idx_bf][idx_mic] = bf_in[idx_mic];
+                }
+            }
     };
 
         // Aplicacao do Beamformer
-
-
-        //complex_float bf_sum = {0,0};
-        //uint16_t idx_mic = 0;
-        //bf_sum.dat[0] = 0;
-        //bf_sum.dat[1] = 0;
-        uint16_t idx_mic;
         for (idx_bf = 0 ; idx_bf < TEST_SIGNAL_SIZE-HILBERT_DELAY ; idx_bf++){
             for (idx_mic = 0 ; idx_mic < NUMERO_MICS ; idx_mic++){
             bf_in[idx_mic].dat[0] = bf_in_vector[idx_bf][idx_mic].dat[0];
@@ -163,16 +156,6 @@ int main(void)
             }
             bf_out = bf_aplicar(bf_in);
             bf_out_vector[idx_bf] = bf_out;
-            /*
-            bf_sum.dat[0] = 0;
-            bf_sum.dat[1] = 0;
-             for (idx_mic = 0 ; idx_mic < NUMERO_MICS ; idx_mic++){
-                 __asm(" NOP");
-                 bf_sum = mpy_SP_CSxCS(bf_pesos[idx_mic],bf_in_vector[idx_bf][idx_mic]);
-                 bf_out_vector[idx_bf].dat[0] = bf_out_vector[idx_bf].dat[0] + bf_sum.dat[0];
-                 bf_out_vector[idx_bf].dat[1] = bf_out_vector[idx_bf].dat[1] + bf_sum.dat[1];
-                 __asm(" NOP");
-             }*/
 
          }
 
