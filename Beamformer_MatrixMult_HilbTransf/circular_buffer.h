@@ -3,7 +3,9 @@
  *
  *  Created on: 24 de out de 2018
  *      Author: lucas
- *  Baseado em https://embedjournal.com/implementing-circular-buffer-embedded-c/
+ *  Baseado em:
+ *       https://embedjournal.com/implementing-circular-buffer-embedded-c/
+ *       https://embeddedartistry.com/blog/2017/4/6/circular-buffers-in-cc#c-implementation
  */
 
 #ifndef CIRCULAR_BUFFER_H_
