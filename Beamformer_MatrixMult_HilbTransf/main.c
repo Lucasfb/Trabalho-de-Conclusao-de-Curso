@@ -9,6 +9,7 @@
 #include "setup.h"
 #include "hilbert_transformer.h"
 #include "bf.h"
+#include  "circular_buffer.h"
 
 #define TEST_SIGNAL_SIZE 160
 /*
@@ -92,17 +93,39 @@ FIR_FP_Handle hnd_hilb_chnl3 = &hilb_chnl3;
 float hilb_buffer_chnl3[HILBERT_TRANSFORMER_ORDER+1];
 //------------------------------------------------------------------------------
 
+float mic_in_chnl0;
 
 
-float hilbert_out_signal_chnl0[TEST_SIGNAL_SIZE];
-float hilbert_out_signal_chnl1[TEST_SIGNAL_SIZE];
-float hilbert_out_signal_chnl2[TEST_SIGNAL_SIZE];
-float hilbert_out_signal_chnl3[TEST_SIGNAL_SIZE];
+float hilbert_out_signal_chnl0_vector[TEST_SIGNAL_SIZE];
+float hilbert_out_signal_chnl1_vector[TEST_SIGNAL_SIZE];
+float hilbert_out_signal_chnl2_vector[TEST_SIGNAL_SIZE];
+float hilbert_out_signal_chnl3_vector[TEST_SIGNAL_SIZE];
 
 int main(void)
 {
     FPU_initSystemClocks();
     FPU_initEpie();
+
+
+    /*
+     * Teste do buffer circular
+    circ_buf_t cb;
+    circ_buf_handler cb_hnd = &cb;
+    float mic_in_buffer[HILBERT_DELAY] = {0};
+    cb_inicializar(cb_hnd, HILBERT_DELAY, mic_in_buffer);
+
+    float teste_in = 0;
+    float teste_out;
+    uint32_t i;
+    for (i = 0; i<HILBERT_DELAY;i++){
+        cb_push(cb_hnd, teste_in);
+        teste_in++;
+    }
+    for (i = 0; i<HILBERT_DELAY; i++){
+        teste_out = cb_pop(cb_hnd);
+    }
+    */
+
 
     // Inicializacao da transformada de Hilbert
     hilbert_transformer_create(hnd_hilb_chnl0, hilb_buffer_chnl0,coeffs_hilb);
@@ -115,17 +138,17 @@ int main(void)
 
     for (idx_hilb = 0; idx_hilb < HILBERT_DELAY;idx_hilb++){
         // Aplicacao da Transformada de Hilbert, para os
-        hilbert_out_signal_chnl0[idx_hilb]= hilbert_transformer(test_mic_in_chnl0[idx_hilb], hnd_hilb_chnl0);
-        hilbert_out_signal_chnl1[idx_hilb]= hilbert_transformer(test_mic_in_chnl1[idx_hilb], hnd_hilb_chnl1);
-        hilbert_out_signal_chnl2[idx_hilb]= hilbert_transformer(test_mic_in_chnl2[idx_hilb], hnd_hilb_chnl2);
-        hilbert_out_signal_chnl3[idx_hilb]= hilbert_transformer(test_mic_in_chnl3[idx_hilb], hnd_hilb_chnl3);
+        hilbert_out_signal_chnl0_vector[idx_hilb]= hilbert_transformer(test_mic_in_chnl0[idx_hilb], hnd_hilb_chnl0);
+        hilbert_out_signal_chnl1_vector[idx_hilb]= hilbert_transformer(test_mic_in_chnl1[idx_hilb], hnd_hilb_chnl1);
+        hilbert_out_signal_chnl2_vector[idx_hilb]= hilbert_transformer(test_mic_in_chnl2[idx_hilb], hnd_hilb_chnl2);
+        hilbert_out_signal_chnl3_vector[idx_hilb]= hilbert_transformer(test_mic_in_chnl3[idx_hilb], hnd_hilb_chnl3);
     }
     for (idx_hilb = HILBERT_DELAY; idx_hilb < TEST_SIGNAL_SIZE;idx_hilb++){
         // Aplicacao da Transformada de Hilbert
-        hilbert_out_signal_chnl0[idx_hilb]= hilbert_transformer(test_mic_in_chnl0[idx_hilb], hnd_hilb_chnl0);
-        hilbert_out_signal_chnl1[idx_hilb]= hilbert_transformer(test_mic_in_chnl1[idx_hilb], hnd_hilb_chnl1);
-        hilbert_out_signal_chnl2[idx_hilb]= hilbert_transformer(test_mic_in_chnl2[idx_hilb], hnd_hilb_chnl2);
-        hilbert_out_signal_chnl3[idx_hilb]= hilbert_transformer(test_mic_in_chnl3[idx_hilb], hnd_hilb_chnl3);
+        hilbert_out_signal_chnl0_vector[idx_hilb]= hilbert_transformer(test_mic_in_chnl0[idx_hilb], hnd_hilb_chnl0);
+        hilbert_out_signal_chnl1_vector[idx_hilb]= hilbert_transformer(test_mic_in_chnl1[idx_hilb], hnd_hilb_chnl1);
+        hilbert_out_signal_chnl2_vector[idx_hilb]= hilbert_transformer(test_mic_in_chnl2[idx_hilb], hnd_hilb_chnl2);
+        hilbert_out_signal_chnl3_vector[idx_hilb]= hilbert_transformer(test_mic_in_chnl3[idx_hilb], hnd_hilb_chnl3);
         }
 
 
@@ -135,13 +158,13 @@ int main(void)
     for (idx_bf = 0; idx_bf <TEST_SIGNAL_SIZE - HILBERT_DELAY; idx_bf++ ){
             for (idx_mic = 0; idx_mic < NUMERO_MICS; idx_mic++){
             bf_in[0].dat[0] = test_mic_in_chnl0[idx_bf];
-            bf_in[0].dat[1] = hilbert_out_signal_chnl0[idx_bf+HILBERT_DELAY];
+            bf_in[0].dat[1] = hilbert_out_signal_chnl0_vector[idx_bf+HILBERT_DELAY];
             bf_in[1].dat[0] = test_mic_in_chnl1[idx_bf];
-            bf_in[1].dat[1] = hilbert_out_signal_chnl1[idx_bf+HILBERT_DELAY];
+            bf_in[1].dat[1] = hilbert_out_signal_chnl1_vector[idx_bf+HILBERT_DELAY];
             bf_in[2].dat[0] = test_mic_in_chnl2[idx_bf];
-            bf_in[2].dat[1] = hilbert_out_signal_chnl2[idx_bf+HILBERT_DELAY];
+            bf_in[2].dat[1] = hilbert_out_signal_chnl2_vector[idx_bf+HILBERT_DELAY];
             bf_in[3].dat[0] = test_mic_in_chnl3[idx_bf];
-            bf_in[3].dat[1] = hilbert_out_signal_chnl3[idx_bf+HILBERT_DELAY];
+            bf_in[3].dat[1] = hilbert_out_signal_chnl3_vector[idx_bf+HILBERT_DELAY];
             for (idx_mic = 0; idx_mic < NUMERO_MICS; idx_mic++){
                 bf_in_vector[idx_bf][idx_mic] = bf_in[idx_mic];
                 }
