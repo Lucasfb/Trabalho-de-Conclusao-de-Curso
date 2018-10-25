@@ -210,7 +210,7 @@ int main(void)
 
         // Aplicacao dos pesos do Beamformer
             bf_out = bf_aplicar(bf_in);
-            bf_out_vector[idx_bf] = bf_out;
+            //bf_out_vector[idx_bf] = bf_out;
     }
     for(;;);
     done();
