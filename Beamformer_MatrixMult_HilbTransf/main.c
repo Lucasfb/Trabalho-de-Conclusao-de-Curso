@@ -101,6 +101,7 @@ float hilbert_out_chnl3_vector[TEST_SIGNAL_SIZE];
 int main(void)
 {
     FPU_initSystemClocks();
+    InitSysPll(XTAL_OSC,IMULT_20,FMULT_0,PLLCLK_BY_1);
     FPU_initEpie();
 
 
@@ -142,7 +143,7 @@ int main(void)
 
     // Variaveis auxiliares para loops
     uint16_t idx_bf;
-    uint16_t idx_mic;
+
     uint32_t idx_hilb = 0;
 
     // Aplicando o filtro FIR para a Transformada de Hilbert
@@ -202,7 +203,8 @@ int main(void)
             bf_in[2].dat[1] = hilbert_out_chnl2;
             bf_in[3].dat[0] = cb_pop(cb_hnd_chnl3);
             bf_in[3].dat[1] = hilbert_out_chnl3;
-            /*for (idx_mic = 0; idx_mic < NUMERO_MICS; idx_mic++){
+            /*uint16_t idx_mic;
+            for (idx_mic = 0; idx_mic < NUMERO_MICS; idx_mic++){
                 bf_in_vector[idx_bf][idx_mic] = bf_in[idx_mic];
             } */
 
