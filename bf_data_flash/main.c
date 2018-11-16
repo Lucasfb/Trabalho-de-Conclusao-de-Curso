@@ -10,53 +10,36 @@
 #include "hilbert_transformer.h"
 #include "bf.h"
 #include  "circular_buffer.h"
-
-#define TEST_SIGNAL_SIZE 160
+// #define INPUT_SIGNAL_LENGTH 41600
+#define INPUT_SIGNAL_LENGTH 32768
+#define TEST_SIGNAL_SIZE 1000
 /*
  * Declara uma seção na memoria com um nome. O linker deve ser alterado e a memoria alinhada, de acordo com as instrucoes da biblioteca
  */
 // Secoes para dados de teste
-#pragma DATA_SECTION(test_mic_in_chnl0, "sigIn0");
-#pragma DATA_SECTION(test_out_signal_chnl0, "sigOut0");
-const float test_mic_in_chnl0[TEST_SIGNAL_SIZE] = {
-#include <test_input_signal_chnl0.h>
-};
-const float test_out_signal_chnl0[TEST_SIGNAL_SIZE] = {
-#include <test_output_signal_chnl0.h>
-};
 
-#pragma DATA_SECTION(test_mic_in_chnl1, "sigIn1");
-#pragma DATA_SECTION(test_out_signal_chnl1, "sigOut1");
-const float test_mic_in_chnl1[TEST_SIGNAL_SIZE] = {
-#include <test_input_signal_chnl1.h>
+#pragma DATA_SECTION(mic1_in,"mic1_in");
+const int16_t mic1_in[INPUT_SIGNAL_LENGTH] = {
+#include <mic1_pcm.h>
 };
-const float test_out_signal_chnl1[TEST_SIGNAL_SIZE] = {
-#include <test_output_signal_chnl1.h>
+#pragma DATA_SECTION(mic2_in,"mic2_in");
+const int16_t mic2_in[INPUT_SIGNAL_LENGTH] = {
+#include <mic2_pcm.h>
 };
-
-#pragma DATA_SECTION(test_mic_in_chnl2, "sigIn2");
-#pragma DATA_SECTION(test_out_signal_chnl2, "sigOut2");
-const float test_mic_in_chnl2[TEST_SIGNAL_SIZE] = {
-#include <test_input_signal_chnl2.h>
+#pragma DATA_SECTION(mic3_in,"mic3_in");
+const int16_t mic3_in[INPUT_SIGNAL_LENGTH] = {
+#include <mic3_pcm.h>
 };
-const float test_out_signal_chnl2[TEST_SIGNAL_SIZE] = {
-#include <test_output_signal_chnl2.h>
-};
-
-#pragma DATA_SECTION(test_mic_in_chnl3, "sigIn3");
-#pragma DATA_SECTION(test_out_signal_chnl3, "sigOut3");
-const float test_mic_in_chnl3[TEST_SIGNAL_SIZE] = {
-#include <test_input_signal_chnl3.h>
-};
-const float test_out_signal_chnl3[TEST_SIGNAL_SIZE] = {
-#include <test_output_signal_chnl3.h>
+#pragma DATA_SECTION(mic4_in,"mic4_in");
+const int16_t mic4_in[INPUT_SIGNAL_LENGTH] = {
+#include <mic4_pcm.h>
 };
 //---------------------------------------------------------------------
 
 #pragma DATA_SECTION(bf_out_vector, "bf_test_output");
-complex_float bf_out_vector[TEST_SIGNAL_SIZE-HILBERT_DELAY];
-#pragma DATA_SECTION(bf_in_vector, "bf_test_input");
-complex_float bf_in_vector[TEST_SIGNAL_SIZE-HILBERT_DELAY][NUMERO_MICS];
+complex_float bf_out_vector[TEST_SIGNAL_SIZE];
+//#pragma DATA_SECTION(bf_in_vector, "bf_test_input");
+//complex_float bf_in_vector[TEST_SIGNAL_SIZE-HILBERT_DELAY][NUMERO_MICS];
 complex_float bf_in[NUMERO_MICS];
 complex_float bf_out;
 
@@ -64,7 +47,7 @@ complex_float bf_out;
 // Coeficientes da transformada de Hilbert. Os mesmos para todos os casos
 #pragma DATA_SECTION(coeffs_hilb, "coeffhilb");
 float coeffs_hilb[HILBERT_TRANSFORMER_ORDER+1] = {
-#include "coeffs_hilbert_negativo.h"
+#include "coeffs_hilbert.h"
 };
 //----------------------------------------------------------------
 // Secao para declaracao dos filtros. Sao criados 4, cada um com buffer proprio, para cada canal de microfone
@@ -92,10 +75,10 @@ FIR_FP_Handle hnd_hilb_chnl3 = &hilb_chnl3;
 #pragma DATA_SECTION(hilb_buffer_chnl3, "hilbbuffer3");
 float hilb_buffer_chnl3[HILBERT_TRANSFORMER_ORDER+1];
 //------------------------------------------------------------------------------
+
+#pragma DATA_SECTION(hilbert_out_chnl0_vector, "hilb_out_vector");
 float hilbert_out_chnl0_vector[TEST_SIGNAL_SIZE];
-float hilbert_out_chnl1_vector[TEST_SIGNAL_SIZE];
-float hilbert_out_chnl2_vector[TEST_SIGNAL_SIZE];
-float hilbert_out_chnl3_vector[TEST_SIGNAL_SIZE];
+
 
 
 int main(void)
@@ -104,6 +87,7 @@ int main(void)
     InitSysPll(XTAL_OSC,IMULT_20,FMULT_0,PLLCLK_BY_1);
     FPU_initEpie();
 
+    uint32_t idx_out = 0;
 
     circ_buf_t cb_chnl0;
     circ_buf_handler cb_hnd_chnl0 = &cb_chnl0;
@@ -149,49 +133,43 @@ int main(void)
     // Aplicando o filtro FIR para a Transformada de Hilbert
     for (idx_hilb = 0; idx_hilb < HILBERT_DELAY;idx_hilb++){
         // Aplicacao da Transformada de Hilbert, para os
-        mic_in_chnl0 = test_mic_in_chnl0[idx_hilb];
+        mic_in_chnl0 = (float) mic1_in[idx_hilb]/32768;
         cb_push(cb_hnd_chnl0, mic_in_chnl0);
         hilbert_transformer(mic_in_chnl0, hnd_hilb_chnl0);
-        //hilbert_out_chnl0_vector[idx_hilb]= hilbert_transformer(mic_in_chnl0, hnd_hilb_chnl0);
 
-        mic_in_chnl1 = test_mic_in_chnl1[idx_hilb];
+        mic_in_chnl1 = (float) mic2_in[idx_hilb]/32768;
         cb_push(cb_hnd_chnl1, mic_in_chnl1);
         hilbert_transformer(mic_in_chnl1, hnd_hilb_chnl1);
-        //hilbert_out_chnl1_vector[idx_hilb]= hilbert_transformer(mic_in_chnl1, hnd_hilb_chnl1);
 
-        mic_in_chnl2 = test_mic_in_chnl2[idx_hilb];
+        mic_in_chnl2 = (float) mic3_in[idx_hilb]/32768;
         cb_push(cb_hnd_chnl2, mic_in_chnl2);
         hilbert_transformer(mic_in_chnl2, hnd_hilb_chnl2);
-        //hilbert_out_chnl2_vector[idx_hilb]= hilbert_transformer(mic_in_chnl2, hnd_hilb_chnl2);
 
-        mic_in_chnl3 = test_mic_in_chnl3[idx_hilb];
+        mic_in_chnl3 = (float) mic4_in[idx_hilb]/32768;
         cb_push(cb_hnd_chnl3, mic_in_chnl3);
         hilbert_transformer(mic_in_chnl3, hnd_hilb_chnl3);
-        //hilbert_out_chnl3_vector[idx_hilb]= hilbert_transformer(mic_in_chnl3, hnd_hilb_chnl3);
     }
 
-    for (idx_bf = 0; idx_bf < TEST_SIGNAL_SIZE-HILBERT_DELAY;idx_bf++){
+    for (idx_bf = 0; idx_bf < INPUT_SIGNAL_LENGTH-HILBERT_DELAY;idx_bf++){
         // Aplicacao da Transformada de Hilbert
-        mic_in_chnl0 = test_mic_in_chnl0[idx_bf+HILBERT_DELAY];
+        mic_in_chnl0 = (float) mic1_in[idx_bf+HILBERT_DELAY]/32768;
         cb_push(cb_hnd_chnl0, mic_in_chnl0);
         hilbert_out_chnl0 = hilbert_transformer(mic_in_chnl0, hnd_hilb_chnl0);
-        //hilbert_out_chnl0_vector[idx_bf+HILBERT_DELAY] = hilbert_out_chnl0;
+        if (idx_out < TEST_SIGNAL_SIZE){
+             hilbert_out_chnl0_vector[idx_out] = hilbert_out_chnl0;
+         }
 
-        mic_in_chnl1 = test_mic_in_chnl1[idx_bf+HILBERT_DELAY];
+        mic_in_chnl1 = (float) mic2_in[idx_bf+HILBERT_DELAY]/32768;
         cb_push(cb_hnd_chnl1, mic_in_chnl1);
         hilbert_out_chnl1 = hilbert_transformer(mic_in_chnl1, hnd_hilb_chnl1);
-        //hilbert_out_chnl1_vector[idx_bf+HILBERT_DELAY] = hilbert_out_chnl1;
 
-        mic_in_chnl2 = test_mic_in_chnl2[idx_bf+HILBERT_DELAY];
+        mic_in_chnl2 = (float) mic3_in[idx_bf+HILBERT_DELAY]/32768;
         cb_push(cb_hnd_chnl2, mic_in_chnl2);
         hilbert_out_chnl2 = hilbert_transformer(mic_in_chnl2, hnd_hilb_chnl2);
-        //hilbert_out_chnl2_vector[idx_bf+HILBERT_DELAY] = hilbert_out_chnl2;
 
-        mic_in_chnl3 = test_mic_in_chnl3[idx_bf+HILBERT_DELAY];
+        mic_in_chnl3 = (float) mic4_in[idx_bf+HILBERT_DELAY]/32768;
         cb_push(cb_hnd_chnl3, mic_in_chnl3);
         hilbert_out_chnl3 = hilbert_transformer(mic_in_chnl3, hnd_hilb_chnl3);
-        //hilbert_out_chnl3_vector[idx_bf+HILBERT_DELAY] = hilbert_out_chnl3;
-
 
 
         // USo da Transformada de Hilbert para gerar numeros complexos para o beamformer
@@ -203,14 +181,22 @@ int main(void)
             bf_in[2].dat[1] = hilbert_out_chnl2;
             bf_in[3].dat[0] = cb_pop(cb_hnd_chnl3);
             bf_in[3].dat[1] = hilbert_out_chnl3;
-            /*uint16_t idx_mic;
-            for (idx_mic = 0; idx_mic < NUMERO_MICS; idx_mic++){
-                bf_in_vector[idx_bf][idx_mic] = bf_in[idx_mic];
-            } */
+
+
+           // uint16_t idx_mic;
+           // if (idx_out < TEST_SIGNAL_SIZE){
+           //     for (idx_mic = 0; idx_mic < NUMERO_MICS; idx_mic++){
+           //         bf_in_vector[idx_bf][idx_mic] = bf_in[idx_mic];
+           //      }
+           // }
 
         // Aplicacao dos pesos do Beamformer
             bf_out = bf_aplicar(bf_in);
-            bf_out_vector[idx_bf] = bf_out;
+            if (idx_out < TEST_SIGNAL_SIZE){
+                bf_out_vector[idx_out] = bf_out;
+                idx_out++;
+            }
+
     }
     for(;;);
     done();
