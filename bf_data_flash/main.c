@@ -150,7 +150,7 @@ int main(void)
         hilbert_transformer(mic_in_chnl3, hnd_hilb_chnl3);
     }
 
-    for (idx_bf = 0; idx_bf < INPUT_SIGNAL_LENGTH-HILBERT_DELAY;idx_bf++){
+    for (idx_bf = 0; idx_bf < INPUT_SIGNAL_LENGTH-2*HILBERT_DELAY;idx_bf++){
         // Aplicacao da Transformada de Hilbert
         mic_in_chnl0 = (float) mic1_in[idx_bf+HILBERT_DELAY]/32768;
         cb_push(cb_hnd_chnl0, mic_in_chnl0);
